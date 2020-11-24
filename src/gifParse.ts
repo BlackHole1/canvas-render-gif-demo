@@ -7,7 +7,6 @@ export class GifParase {
     private readonly readerConfig: ReaderConfig;
 
     private readonly tempCtx: CanvasRenderingContext2D;
-    private readonly tempImage: HTMLImageElement;
 
     private timeoutID: number = NaN;
 
@@ -30,8 +29,6 @@ export class GifParase {
         this.tempCtx = document
             .createElement("canvas")
             .getContext("2d") as CanvasRenderingContext2D;
-
-        this.tempImage = new Image();
 
         this.readerConfig = {
             frameNumber: 0,
@@ -106,6 +103,7 @@ export class GifParase {
         const imageDate = ctx.getImageData(0, 0, this.reader.width, this.reader.height);
         this.reader.decodeAndBlitFrameRGBA(frameNumber, imageDate.data);
 
+        // 这里先把 数据通过 putImageData 渲染，因为 ImageData 类型不能传递给 drawImage
         this.tempCtx.canvas.width = frameInfo.width;
         this.tempCtx.canvas.height = frameInfo.height;
         this.tempCtx.putImageData(
@@ -118,9 +116,8 @@ export class GifParase {
             frameInfo.height,
         );
 
-        this.tempImage.src = this.tempCtx.canvas.toDataURL("image/png", 1);
-
-        ctx.drawImage(this.tempImage, 0, 0, this.options.ctx.width, this.options.ctx.height);
+        // 因为上方的 putImageData 的渲染过程是基于像素点绘制的，无法调整 gif 的宽高，所以这里再把上方的数据通过 drawImage 绘制到真正的 canvas 画布上
+        ctx.drawImage(this.tempCtx.canvas, 0, 0, this.options.ctx.width, this.options.ctx.height);
 
         this.readerConfig.previousFrameInfo = frameInfo;
 
