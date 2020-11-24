@@ -118,9 +118,7 @@ export class GifParase {
             frameInfo.height,
         );
 
-        this.tempImage.src = this.tempCtx.canvas.toDataURL("image/png", 1);
-
-        ctx.drawImage(this.tempImage, 0, 0, this.options.ctx.width, this.options.ctx.height);
+        ctx.drawImage(this.tempCtx.canvas, 0, 0, this.options.ctx.width, this.options.ctx.height);
 
         this.readerConfig.previousFrameInfo = frameInfo;
 
