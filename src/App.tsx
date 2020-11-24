@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fetchGIF } from "./Utils";
 import gif from "./gif_demo.gif";
-import { GifParase } from "./gifParse";
+import { GifParase } from "./gifParse2";
 
 function App() {
     const [gifParase, setGifParase] = useState<GifParase | null>(null);
